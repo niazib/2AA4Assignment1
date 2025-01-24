@@ -7,7 +7,7 @@ public class Solver {
     private String path;
     private Maze maze;
 
-    public Explorer(Maze input_maze) {
+    public Solver(Maze input_maze) {
         maze = input_maze;
         int[] pos = maze.getStarterPosition();
         if (pos == null) {
@@ -95,7 +95,7 @@ public class Solver {
         }
     }
 
-    private void explore() {
+    private void explorer() {
         path = "";
         for (int i=0; i<10; i++) {
             move();
