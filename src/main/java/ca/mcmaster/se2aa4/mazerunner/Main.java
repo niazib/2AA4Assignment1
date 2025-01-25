@@ -30,7 +30,6 @@ public class Main {
             maze = new Maze(maze_path);
             solver = new Solver(maze);
             logger.info("**** Computing path");
-            maze.print_maze();
             solver.explorer();
         } catch(Exception e) {
             logger.error("/!\\ An error has occured /!\\");

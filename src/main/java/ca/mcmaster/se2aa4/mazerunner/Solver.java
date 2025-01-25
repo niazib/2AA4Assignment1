@@ -1,4 +1,6 @@
 package ca.mcmaster.se2aa4.mazerunner;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class Solver {
     private int r; // Up and Down
@@ -6,6 +8,7 @@ public class Solver {
     private String direction_facing;
     private String path;
     private Maze maze;
+    private static final Logger logger = LogManager.getLogger();
 
     public Solver(Maze input_maze) {
         maze = input_maze;
@@ -100,6 +103,6 @@ public class Solver {
         for (int i=0; i<10; i++) {
             move();
         }
-        System.out.println(path);
+        logger.info(path);
     }
 }

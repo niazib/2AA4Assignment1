@@ -50,12 +50,10 @@ class Maze {
                 reader.close();
                 return maze_grid;
             } catch(Exception e) {
-                logger.error("/!\\ An error has occured /!\\");
-                System.out.print("Maze location not found. ");
+                logger.error("/!\\ An error has occured: Maze location not found /!\\");
             }
         }
         logger.info("**** Using default maze");
-        System.out.println("Using defualt Maze.");
         row_size = 3;
         column_size = 3;
         return new char[][]{{'#','#','#'},
