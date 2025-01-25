@@ -95,10 +95,11 @@ public class Solver {
         }
     }
 
-    private void explorer() {
+    public void explorer() {
         path = "";
         for (int i=0; i<10; i++) {
             move();
         }
+        System.out.println(path);
     }
 }

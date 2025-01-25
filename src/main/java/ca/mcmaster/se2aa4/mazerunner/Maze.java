@@ -20,33 +20,42 @@ class Maze {
         String maze_string = "";
         row_size = 0;
         column_size = 0;
-        try {
-            logger.info("**** Reading the maze from file " + maze_path);
-            BufferedReader reader;
-            reader = new BufferedReader(new FileReader(maze_path));
-            String line;
-            while ((line = reader.readLine()) != null) {
-                row_size = row_size+1;
-                if (line.length() > column_size) {
-                    column_size = line.length();
+        if (maze_path != "") {
+            try {
+                logger.info("**** Reading the maze from file " + maze_path);
+                BufferedReader reader;
+                reader = new BufferedReader(new FileReader(maze_path));
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    row_size = row_size+1;
+                    if (line.length() > column_size) {
+                        column_size = line.length();
+                    }
                 }
-            }
-            reader.close();
-            maze_grid = new char[row_size][column_size];
-            reader = new BufferedReader(new FileReader(maze_path));
-            int row = 0;
-            while ((line = reader.readLine()) != null) {
-                for (int col = 0; col < line.length(); col++) {
-                    maze_grid[row][col] = line.charAt(col);
+                reader.close();
+                maze_grid = new char[row_size][column_size];
+                reader = new BufferedReader(new FileReader(maze_path));
+                int row = 0;
+                while ((line = reader.readLine()) != null) {
+                    for (int col = 0; col < line.length(); col++) {
+                        maze_grid[row][col] = line.charAt(col);
+                    }
+                    if (line.length() < column_size) {
+                        for (int i = 0; i < column_size - line.length(); i++) {
+                            maze_grid[row][line.length()+i] = ' ';
+                        } 
+                    }
+                    row = row+1;
                 }
-                row = row+1;
+                reader.close();
+                return maze_grid;
+            } catch(Exception e) {
+                logger.error("/!\\ An error has occured /!\\");
+                System.out.print("Maze location not found. ");
             }
-            reader.close();
-            return maze_grid;
-        } catch(Exception e) {
-            logger.error("/!\\ An error has occured /!\\");
         }
         logger.info("**** Using default maze");
+        System.out.println("Using defualt Maze.");
         row_size = 3;
         column_size = 3;
         return new char[][]{{'#','#','#'},
