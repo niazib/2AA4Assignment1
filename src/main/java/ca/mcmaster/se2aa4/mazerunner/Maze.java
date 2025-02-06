@@ -95,32 +95,32 @@ class Maze {
     }
 
     public int[] getStarterPosition() {
-        // Check top row
-        for (int i = 0; i < column_size; i++) {
-            if (check_space(0, i)) {
-                return new int[]{0, i};
-            }
-        }
-        // Check bottom row
-        for (int i = 0; i < column_size; i++) {
-            if (check_space(row_size - 1, i)) {
-                return new int[]{row_size - 1, i};
-            }
-        }
+        int count = 0;
+        int[] positions = new int[4];
+
         // Check left column
         for (int i = 0; i < row_size; i++) {
             if (check_space(i, 0)) {
-                return new int[]{i, 0};
+                positions[count] = i;
+                positions[count + 1] = 0;
+                count = count + 2;
+                break;
             }
         }
         // Check right column
         for (int i = 0; i < row_size; i++) {
             if (check_space(i, column_size - 1)) {
-                return new int[]{i, column_size - 1};
+                positions[count] = i;
+                positions[count + 1] = column_size - 1;
+                count += 2;
+                break;
             }
         }
-        // No starting position
-        logger.error("/!\\ An error has occured: No starter position in maze /!\\");
-        return null;
+        // No starting or ending position
+        if (count < 4) {
+            logger.error("/!\\ An error has occurred: Less than two entrances/exits in maze /!\\");
+            return null;
+        }
+        return positions;
     }
 }
