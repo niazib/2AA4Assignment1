@@ -2,10 +2,11 @@ package ca.mcmaster.se2aa4.mazerunner;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-class Maze {
+public class Maze implements MazeInterface {
     private char[][] maze;
     private int row_size;
     private int column_size;
@@ -61,6 +62,7 @@ class Maze {
                 {'#','#','#'}};
     }
 
+    @Override
     public void print_maze() {
         System.out.println("Maze:");
         for (int i = 0; i < row_size; i++) {
@@ -71,7 +73,7 @@ class Maze {
         }
     }
 
-
+    @Override
     public boolean check_space(int row, int column) {
         if (row>=row_size || row<0 || column>=column_size || column<0) {
             return false;
@@ -85,6 +87,7 @@ class Maze {
         }
     }
 
+    @Override
     public boolean check_outofbounds(int row, int column) {
         if (row>=row_size || row<0 || column>=column_size || column<0) {
             return true;
@@ -94,6 +97,7 @@ class Maze {
         }
     }
 
+    @Override
     public int[] getStarterPosition() {
         int count = 0;
         int[] positions = new int[4];

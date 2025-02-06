@@ -2,17 +2,18 @@ package ca.mcmaster.se2aa4.mazerunner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-public class Solver {
+public class Solver implements MazeNavigator {
     private int r; // Up and Down
     private int c; // Left and Right
-    int[] initial_pos;
-    int[] all_positions;
+    private int[] initial_pos;
+    private int[] all_positions;
     private String direction_facing;
     private String path;
-    private Maze maze;
+    private MazeInterface maze;
+    private StringHandler stringHandler;
     private static final Logger logger = LogManager.getLogger();
 
-    public Solver(Maze input_maze) {
+    public Solver (MazeInterface input_maze) {
         maze = input_maze;
         all_positions = maze.getStarterPosition();
         if (all_positions == null) {
@@ -27,8 +28,35 @@ public class Solver {
         }
         r = initial_pos[0];
         c = initial_pos[1];
+        stringHandler = new StringHandler();
     }
 
+    @Override
+    public int get_row() {
+        return r; 
+    }
+
+    @Override
+    public int get_column() {
+        return c; 
+    }
+
+    @Override
+    public int[] get_initialPos() {
+        return initial_pos;
+    }
+
+    @Override
+    public String get_path() {
+        return path;
+    }
+
+    @Override
+    public void set_path(String newPath) {
+        path = newPath;
+    }
+
+    @Override
     public void swap_solver_start_end() {
         if (initial_pos[0] == all_positions[0]) {
             initial_pos[0] = all_positions[2];
@@ -49,7 +77,8 @@ public class Solver {
         
     }
 
-    private boolean check_exit() {
+    @Override
+    public boolean check_exit() {
         if (!(r == initial_pos[0] && c == initial_pos[1])) {
             if (maze.check_outofbounds(r, c+1) || maze.check_outofbounds(r, c-1) || maze.check_outofbounds(r+1, c) ||  maze.check_outofbounds(r-1, c)) {
                 return true;
@@ -58,7 +87,8 @@ public class Solver {
         return false;
     }
 
-    private boolean move_right() {
+    @Override
+    public boolean move_right() {
         String path_append = "RF";
         switch (direction_facing) {
             case "right":
@@ -97,7 +127,8 @@ public class Solver {
         return false;
     }
 
-    private boolean move_left() {
+    @Override
+    public boolean move_left() {
         String path_append = "LF";
         switch (direction_facing) {
             case "right":
@@ -136,7 +167,8 @@ public class Solver {
         return false;
     }
 
-    private boolean move_forward() {
+    @Override
+    public boolean move_forward() {
         String path_append = "F";
         switch (direction_facing) {
             case "right":
@@ -175,7 +207,8 @@ public class Solver {
         return false;
     }
 
-    private boolean move_backward() {
+    @Override
+    public boolean move_backward() {
         String path_append = "RRF";
         switch (direction_facing) {
             case "right":
@@ -214,7 +247,8 @@ public class Solver {
         return false;
     }
 
-    private void turn_right() {
+    @Override
+    public void turn_right() {
         switch (direction_facing) {
             case "right":
                 direction_facing = "down";
@@ -232,7 +266,8 @@ public class Solver {
         path = path + "R";
     }
 
-    private void turn_left() {
+    @Override
+    public void turn_left() {
         switch (direction_facing) {
             case "right":
                 direction_facing = "up";
@@ -250,98 +285,9 @@ public class Solver {
         path = path + "L";
     }
 
-    private boolean right_hand_algorithm() {
-        while(true) {
-            if (!move_right()) {
-                if (!move_forward()) {
-                    if(!move_left()) {
-                        move_backward();
-                    } 
-                } 
-            } 
-            logger.info((r + ", " + c));
-            if (r == initial_pos[0] && c == initial_pos[1]) {
-                return false;
-            }
-            if (check_exit()) {
-                return true;
-            }
-        }
-    }
-
-    private String factorize_path(String path) {
-        String result = "";
-        int count = 1;
-
-        for (int i = 0; i < path.length(); i++) {
-            if (i+1<path.length() && path.charAt(i) == path.charAt(i+1)) {
-                count = count+1;
-            }
-            else {
-                if (count > 1) { // Repeating character
-                    result = result + count + "" + path.charAt(i) + " ";
-                }
-                else { // Single character
-                    result = result + path.charAt(i) + " ";
-                }
-                count = 1;
-            }
-        }
-        return result.trim();
-    }
-
-    private String expand_path(String path) {
-        String result = "";
-        int i = 0;
-        int int_length;
-        String the_int;
-
-        while (i < path.length()) {
-            char c = path.charAt(i);
-
-            if (Character.isDigit(c)) {
-                i = i+1;
-                the_int = "" + c;
-                while (i < path.length()) {
-                    if (Character.isDigit(path.charAt(i))) {
-                        the_int = the_int + path.charAt(i);
-                    }
-                    else {
-                        break;
-                    }
-                    i = i + 1;
-                }
-                int count = Integer.parseInt(the_int);
-                if (i < path.length() && (path.charAt(i) == 'F' || path.charAt(i) == 'L' || path.charAt(i) == 'R')) {
-                    for (int j = 0; j < count; j++) {
-                        result = result + path.charAt(i);
-                    }
-                }
-            }
-            else if (c == 'F' || c == 'L' || c == 'R') {
-                result = result + c;
-            }
-            i=i+1;
-        }
-        return result;
-    }
-
-    public boolean explorer() {
-        path = "";
-        if (right_hand_algorithm()) {
-            logger.info(path);
-            String factorized_path = factorize_path(path);
-            System.out.println(factorized_path);
-            return true;
-        }
-        else {
-            System.out.println("No exit found in the maze.");
-            return false;
-        }
-    }
-
+    @Override
     public boolean check_path(String given_path) {
-        given_path = expand_path(given_path);
+        given_path = stringHandler.expand_path(given_path);
         for (int i = 0; i < given_path.length(); i++) {
             if (given_path.charAt(i) == 'F') {
                 move_forward();

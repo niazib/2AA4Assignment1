@@ -1,43 +1,28 @@
 package ca.mcmaster.se2aa4.mazerunner;
 
-import org.apache.commons.cli.CommandLine;
-import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.DefaultParser;
-import org.apache.commons.cli.Options;
-import org.apache.commons.cli.ParseException;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-
-import java.util.Scanner;
 
 public class Main {
 
     private static final Logger logger = LogManager.getLogger();
 
     public static void main(String[] args) {
-        Maze maze;
-        Solver solver;
+        MazeInterface maze;
+        MazeNavigator solver;
+        PathFindingAlgorithm algorithm;
+        FlagHandler flaghandler;
         logger.info("** Starting Maze Runner");
-        logger.info("**** Reading Command-Line Arguments");
-        Options options = new Options();
-        options.addOption("i", true, "Maze Location");
-        options.addOption("p", true, "Verify Maze Path");
-        CommandLineParser parser = new DefaultParser();
+
         try {
-            CommandLine cmd = parser.parse(options, args);
-            String maze_location = cmd.getOptionValue("i","");
+            flaghandler = new FlagHandler(args);
+            String maze_location = flaghandler.get_i_flag();
             maze = new Maze(maze_location);
             solver = new Solver(maze);
             logger.info("**** Computing path");
-            maze.print_maze();
-
-            if (cmd.hasOption("p")) {
-                String maze_path = cmd.getOptionValue("p");
+            algorithm = new RightHandAlgorithm(solver);
+            if (flaghandler.check_p_flag()) {
+                String maze_path = flaghandler.get_p_flag();
                 if (solver.check_path(maze_path)) {
                     System.out.println("correct path");
                 }
@@ -52,7 +37,7 @@ public class Main {
                 }
             } 
             else {
-                solver.explorer();
+                algorithm.explorer();
             }
 
         } catch(Exception e) {
