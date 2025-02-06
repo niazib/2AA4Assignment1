@@ -12,6 +12,9 @@ import java.io.FileReader;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+
+import java.util.Scanner;
+
 public class Main {
 
     private static final Logger logger = LogManager.getLogger();
@@ -22,15 +25,36 @@ public class Main {
         logger.info("** Starting Maze Runner");
         logger.info("**** Reading Command-Line Arguments");
         Options options = new Options();
-        options.addOption("i", true, "Maze Path");
+        options.addOption("i", true, "Maze Location");
+        options.addOption("p", true, "Verify Maze Path");
         CommandLineParser parser = new DefaultParser();
         try {
             CommandLine cmd = parser.parse(options, args);
-            String maze_path = cmd.getOptionValue("i","");
-            maze = new Maze(maze_path);
+            String maze_location = cmd.getOptionValue("i","");
+            maze = new Maze(maze_location);
             solver = new Solver(maze);
             logger.info("**** Computing path");
-            solver.explorer();
+            maze.print_maze();
+
+            if (cmd.hasOption("p")) {
+                String maze_path = cmd.getOptionValue("p");
+                if (solver.check_path(maze_path)) {
+                    System.out.println("correct path");
+                }
+                else {
+                    solver.swap_solver_start_end();
+                    if (solver.check_path(maze_path)) {
+                        System.out.println("correct path");
+                    }
+                    else{
+                        System.out.println("incorrect path");
+                    }
+                }
+            } 
+            else {
+                solver.explorer();
+            }
+
         } catch(Exception e) {
             logger.error("/!\\ An error has occured /!\\");
         }
