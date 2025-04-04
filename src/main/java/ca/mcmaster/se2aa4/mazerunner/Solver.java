@@ -47,6 +47,11 @@ public class Solver implements MazeNavigator {
     }
 
     @Override
+    public String get_direction_facing() {
+        return direction_facing;
+    }
+
+    @Override
     public String get_path() {
         return path;
     }
