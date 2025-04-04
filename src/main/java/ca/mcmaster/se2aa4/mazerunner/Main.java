@@ -25,7 +25,9 @@ public class Main {
             maze = MazeFactory.createMaze(maze_location);
             solver = NavigatorFactory.createNavigator(maze);
             logger.info("**** Computing path");
-            algorithm = PathFindingFactory.createAlgorithm(solver);
+
+            String algorithmChosen = flaghandler.get_a_flag();
+            algorithm = PathFindingFactory.createAlgorithm(solver, algorithmChosen);
             
             if (flaghandler.check_p_flag()) {
                 String maze_path = flaghandler.get_p_flag();

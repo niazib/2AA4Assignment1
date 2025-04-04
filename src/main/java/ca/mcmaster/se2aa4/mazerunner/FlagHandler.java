@@ -21,6 +21,7 @@ public class FlagHandler {
         parser = new DefaultParser();
         options.addOption("i", true, "Maze Location");
         options.addOption("p", true, "Verify Maze Path");
+        options.addOption("a", true, "Path Finding Algorithm Selection");
         try {
             cmd = parser.parse(options, args);
         } catch (Exception e) {
@@ -61,6 +62,20 @@ public class FlagHandler {
         } catch(Exception e) {
             logger.error("/!\\ An error has occured reading p flag /!\\");
             return "";
+        }
+    }
+
+
+    public String get_a_flag() {
+        logger.info("**** Reading Command-Line a Flag");
+        try {
+            String algorithm_chosen = cmd.getOptionValue("a", "RIGHT_HAND");
+            algorithm_chosen = algorithm_chosen.trim().replace(" ", "_");
+            return algorithm_chosen;
+
+        } catch(Exception e) {
+            logger.error("/!\\ An error has occured reading a flag /!\\");
+            return "RIGHT_HAND";
         }
     }
 }
