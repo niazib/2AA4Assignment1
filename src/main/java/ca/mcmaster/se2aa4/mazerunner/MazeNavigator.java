@@ -4,8 +4,8 @@ public interface MazeNavigator {
     int get_row();
     public int get_column();
     public int[] get_initialPos();
-    public String get_path();
     public String get_direction_facing();
+    public String get_path();
     public void set_path(String newPath);
 
     void swap_solver_start_end();

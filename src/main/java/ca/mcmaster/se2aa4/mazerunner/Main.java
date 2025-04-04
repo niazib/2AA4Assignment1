@@ -3,6 +3,10 @@ package ca.mcmaster.se2aa4.mazerunner;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import ca.mcmaster.se2aa4.mazerunner.Factory.MazeFactory;
+import ca.mcmaster.se2aa4.mazerunner.Factory.NavigatorFactory; 
+import ca.mcmaster.se2aa4.mazerunner.Factory.PathFindingFactory; 
+
 public class Main {
 
     private static final Logger logger = LogManager.getLogger();
@@ -17,10 +21,12 @@ public class Main {
         try {
             flaghandler = new FlagHandler(args);
             String maze_location = flaghandler.get_i_flag();
-            maze = new Maze(maze_location);
-            solver = new Solver(maze);
+
+            maze = MazeFactory.createMaze(maze_location);
+            solver = NavigatorFactory.createNavigator(maze);
             logger.info("**** Computing path");
-            algorithm = new RightHandAlgorithm(solver);
+            algorithm = PathFindingFactory.createAlgorithm(solver);
+            
             if (flaghandler.check_p_flag()) {
                 String maze_path = flaghandler.get_p_flag();
                 if (solver.check_path(maze_path)) {
